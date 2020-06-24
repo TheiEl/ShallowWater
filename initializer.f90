@@ -2,13 +2,15 @@
 
 subroutine init
 
+!DIR$ freeform
+
   use params
   use model_vars
 
   implicit none
 
   !Iterating variables
-  integer :: i1
+  integer :: i1, i2
 
   ! creating dimensions
   do i1 = 1, nx
@@ -27,8 +29,10 @@ subroutine init
   end do
 
   ! setting up the coriolis matrix
-  do i1 = 1, ny
-    f(:, i1) = 2.0*omega*sin(pi*y(i1)/Ly)
+  do i1 = 1, nx
+    do i2 = 1,ny
+      f(i1, i2) = 2.0*omega*cos(pi*y(i1)/Lx)*sin(pi*y(i2)/Ly)
+    end do
   end do
 
   print *, 'Initialized dimensions!'
@@ -36,7 +40,7 @@ subroutine init
   ! initializing variables
   u(:,:,1) = 0.0
   v(:,:,1) = 0.0
-  h(:,:,1) = H0 - perturb*exp(-(xx**2.0 + yy**2.0))
+  h(:,:,1) = H0 - perturb*exp(-((xx)**2.0 + (yy)**2.0)/sigma2perturb)
 
 end subroutine init
 

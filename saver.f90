@@ -1,4 +1,4 @@
-! THis is the saver module
+! This is the saver module
 
 subroutine data_saver
 
@@ -7,55 +7,48 @@ subroutine data_saver
 
   implicit none
 
-  integer :: io_error
   integer :: i,j,k
 
-  open(unit=20,file='ShallowWater.py', status='new', action='write', iostat=io_error)
-  
-    write(20,'(A,I)') 'nt = ', nt
+  open(unit=20,file='xx.csv', status='new', action='write')
+  open(unit=21,file='yy.csv', status='new', action='write')
+  open(unit=22,file='h.csv', status='new', action='write')
+  open(unit=23,file='n.csv', status='new', action='write')
 
-    write(20,'(A)', advance='no') 'data_array = ['
+    write(23,'(I,A,I,A,I)') nx, ',', ny, ',', pnt
 
-    if ( io_error == 0) then
 
-      do k=1,nt
+    do i=1,nx
 
-        write(20,'(A)', advance='no') '['
-
-        do j=1,ny
-      
-          write(20,'(A)', advance='no') '['
-      
-          do i=1,nx
-          
-            write(20,'(A,F,A,F,A,F,A,F,A)', advance='no') '[', x(i), ',', y(j), ',', h(i,j,k), ',', t(k), ']'
-
-            if (i < nx) write(20,'(A)', advance='no') ',' 
-         
-          end do
-
-          write(20,'(A)', advance='no') ']'
-
-          if (j < ny) write(20,'(A)', advance='no') ','
-       
-        end do
-
-        write(20,'(A)', advance='no') ']'
-       
-        if (k < nt) write(20,'(A)', advance='no') ','
-
-        print *, 'Writing done for timestep n = ', k,' of ', nt
-     
+      do j=1,(ny-1)
+        write(20,'(F,A)', advance='no') x(i), ','
+        write(21,'(F,A)', advance='no') y(j), ','
+        write(22,'(F,A)', advance='no') h(i,j,1), ','
       end do
-      
-      write(20,'(A)', advance='no') ']'
 
-    else
+        write(20,'(F)', advance='yes') x(i)
+        write(21,'(F)', advance='yes') y(ny)
+        write(22,'(F,A)', advance='yes') h(i,j,1)
 
-      write(*,*) 'Beim Öffnen der Datei ist ein Fehler Nr.', io_error,' aufgetreten' 
-    
-    end if
+    end do
 
-  close(unit=20)
+    do k=2,pnt
+ 
+      write(*,'(A,I,A,I)') 'Saving data for timestep number ', k-1, ' of ', pnt-1
+
+      do i=1,nx
+        
+        do j=1,(ny-1)
+          write(22,'(F,A)', advance='no') h(i,j,(k-1)*dnt), ','
+        end do
+        
+        write(22,'(F)', advance='yes') h(i,ny,(k-1)*dnt)
+        
+      end do
+    end do
+
+  close(unit=21)
+  close(unit=22)
+  close(unit=23)
+  close(unit=24)
 
 end subroutine data_saver

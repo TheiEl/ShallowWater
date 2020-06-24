@@ -5,19 +5,23 @@ module params
   implicit none
 
   ! number of points in x, y direction
-  integer, parameter :: nx = 151, ny = 101
+  integer, parameter :: nx = 151, ny = 151
 
-  ! nuzmber of time steps
-  integer, parameter :: nt = 1001
+  ! number of time steps
+  integer, parameter :: nt = 2001
+
+  ! printed timestep size, effective printed number of timesteps
+  integer, parameter :: dnt = 15
+  integer, parameter :: pnt = nt/dnt+1
 
   ! start and end point for x axis
-  real*8, parameter :: xstart = -3.0, xend = 3.0
+  real*8, parameter :: xstart = -5.0, xend = 5.0
 
   ! start and end point for y axis
-  real*8, parameter :: ystart = -2.0, yend = 2.0
+  real*8, parameter :: ystart = -6.0, yend = 4.0
 
   ! start and end point for time
-  real*8, parameter :: tstart = 0.0, tend = 2.0
+  real*8, parameter :: tstart = 0.0, tend = 5.0
 
   ! x axis and y axis lengths
   real*8, parameter :: Lx = xend - xstart
@@ -51,8 +55,9 @@ module params
   ! Viscosity of the fluid
   real*8, parameter ::nu = 1.5e-5
 
-  ! perturbation
-  real*8, parameter :: perturb = 0.05
+  ! perturbation, perturbation variance
+  real*8, parameter :: perturb = 0.08
+  real*8, parameter :: sigma2perturb = (Lx**2+Ly**2)/200.0
 
   ! file name to save data
   character*25, parameter :: fname = 'datas_small_rotation.nc'
